@@ -77,7 +77,7 @@ class EditBlog extends Component {
                         onChange={(event) => { this.handleBlogChange(event.target.value) }}></textarea>
                 </div>
                 <button
-                onClick={() => { this.editBlog(this.props.match.params.id,) }}>Edit</button>
+                onClick={() => { this.editBlog(this.props.match.params.id,) }}>Submit</button>
                 <button
                 onClick={(ev) => { this.back(ev) }}>Back</button>
                 <button

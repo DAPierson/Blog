@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Table from '../table';
+import { rows } from '../config/db';
 
 let router = Router();
 let blogs = new Table('Blogs')
@@ -37,6 +38,13 @@ blogs.delete(req.params.id)
 .then(blogs=>{
     res.send('delete');
 })
+})
+router.get('/tag/:id',(req,res)=>{
+    rows('spTagBlog', [req.params.id])
+    .then(blogs=>{
+        res.json(blogs);
+        console.log(blogs);
+    })
 })
 
 export default router;
