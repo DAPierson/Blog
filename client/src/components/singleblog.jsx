@@ -1,6 +1,6 @@
 
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-dom';
+import { Link } from 'react-router-dom';
 
 class SingleBlog extends Component {
     constructor(props) {
@@ -27,6 +27,18 @@ class SingleBlog extends Component {
                 console.log(err);
             });
     };
+    deleteBlog(id) {
+        fetch(`/api/Blogs/${id}`, {
+            method: 'DELETE',
+        }).then(() => {
+            this.props.history.goBack();
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+    home(ev){
+        this.props.history.goBack();
+    };
 
 
     render() {
@@ -34,6 +46,12 @@ class SingleBlog extends Component {
             <Fragment>
                 <h1> {this.state.blog.title}</h1>
                 <p> {this.state.blog.content}</p>
+                <button
+                onClick={() => { this.deleteBlog(this.props.match.params.id) }}>Delete</button>
+               <Link to={`/${this.props.match.params.id}/edit`}> <button>Edit</button> </Link>
+                <button
+                onClick={(ev) => { this.home(ev) }}>Home</button>
+
             </Fragment>
         );
     }
