@@ -47,4 +47,13 @@ router.get('/tag/:id',(req,res)=>{
     })
 })
 
+router.get('/blog/:id',(req,res)=>{
+    rows('spBlogTag', [req.params.id])
+    .then(tags=>{
+        res.json(tags);
+        console.log(blogs);
+    })
+})
+
+
 export default router;

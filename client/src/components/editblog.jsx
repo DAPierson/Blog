@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-dom';
+import AddTag from './addtag';
 
 class EditBlog extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            alltags:[],
             blog: [],
+            tags: [],
             title: "",
             content: "",
         }
@@ -16,6 +19,36 @@ class EditBlog extends Component {
 
     componentDidMount() {
         this.getBlog(this.props.match.params.id)
+        this.getBlogTag(this.props.match.params.id)
+        this.getTags()
+    }
+    getBlogTag(id) {
+        console.log(id)
+        fetch(`/api/blogs/blog/${id}`)
+            .then((response) => {
+                console.log(response);
+                return response.json();
+
+            }).then((tags) => {
+
+                let tagsArray = [];
+                for (let i = 0; i < tags.length; i++) {
+
+                tagsArray.push({
+                      
+                        id: tags[i].id,
+                        title: tags[i].name,
+                      
+                    });
+                }
+                this.setState({
+                    tags: tagsArray
+                });
+                console.log(this.state.tags);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
     getBlog(id) {
         fetch(`/api/blogs/${id}`)
@@ -25,10 +58,10 @@ class EditBlog extends Component {
                 this.setState({ blog });
                 console.log(this.state.blog.title);
             }).catch((err) => {
-                console.log(err);
+
             });
     };
-    editBlog(id,values) {
+    editBlog(id, values) {
         fetch(`/api/Blogs/${id}`, {
             method: 'PUT',
             headers: {
@@ -44,11 +77,35 @@ class EditBlog extends Component {
             console.log(err);
         });
     }
-    home(ev){
+    getTags() {
+        fetch('/api/Tags/')
+            .then((response) => {
+                return response.json();
+            }).then((tags) => {
+                let tagsArray = [];
+                for (let i = 0; i < tags.length; i++) {
+
+                    tagsArray.push({
+                        name: tags[i].name,
+                        id: tags[i].id,
+
+                    });
+                }
+                this.setState({
+                    alltags: tagsArray
+
+                });
+                console.log(this.state.tags);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    home(ev) {
         this.props.history.push('/');
     };
-  
-    back(ev){
+
+    back(ev) {
         this.props.history.goBack();
     };
     handleTitleChange(value) {
@@ -62,6 +119,32 @@ class EditBlog extends Component {
     render() {
         return (
             <Fragment>
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                    <a className="navbar-brand" href="#">Blogs</a>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul className="navbar-nav">
+                            <li className="nav-item active">
+                                <a className="nav-link" href="#"
+                                onClick={(ev) => { this.home(ev) }}
+                                >Home <span className="sr-only">(current)</span></a>
+                            </li>
+                            <li className="nav-item">
+                            <a className="nav-link" href="#"
+                                onClick={(ev) => { this.back(ev) }}
+                                >Back <span className="sr-only">(current)</span></a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#"
+                                onClick={() => { this.editBlog(this.props.match.params.id, ) }}>Submit</a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </nav>
                 <div className="input-group input-group-sm mb-3">
                     <div className="input-group-prepend">
                         <span className="input-group-text" id="inputGroup-sizing-sm">Title</span>
@@ -73,15 +156,23 @@ class EditBlog extends Component {
                     <div className="input-group-prepend">
                         <span className="input-group-text">Blog</span>
                     </div>
-                    <textarea className="form-control" aria-label="With textarea" placeholder ={`${this.state.blog.content}`}
+                    <textarea className="form-control" aria-label="With textarea" placeholder={`${this.state.blog.content}`}
                         onChange={(event) => { this.handleBlogChange(event.target.value) }}></textarea>
                 </div>
-                <button
-                onClick={() => { this.editBlog(this.props.match.params.id,) }}>Submit</button>
-                <button
-                onClick={(ev) => { this.back(ev) }}>Back</button>
-                <button
-                onClick={(ev) => { this.home(ev) }}>Home</button>
+                <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add Tag/s
+  </button>
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {this.state.alltags.map((tag) => {
+
+                            return (
+                                <AddTag key={tag.id} name={tag.name} id={tag.id} />
+                            )
+                        })}
+                    </div>
+                </div>
+          
 
             </Fragment>
         );
