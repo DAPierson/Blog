@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { Link } from 'react-router-dom';
 import Bloglist from './bloglist';
 import Taglist from './tagslist';
+import AuthButton from "./auth/authButton"
 class HomePage extends Component {
 
     constructor(props) {
@@ -107,7 +108,8 @@ class HomePage extends Component {
                             <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
                         </li>
                         <li className="nav-item">
-                            <Link to='/userlogin' className="nav-link" >Login</Link>
+                            {/* <Link to='/login' className="nav-link" >Login</Link> */}
+                            <AuthButton  />
                         </li>
 
                         <li className="nav-item dropdown">

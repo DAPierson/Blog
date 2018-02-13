@@ -1,13 +1,18 @@
 import { Router } from 'express';
-import peopleRouter from './people';
 import blogsRouter from './Blogs';
 import tagsRouter from './Tags';
-import blogtagsRouter from './BlogTags'
+import blogtagsRouter from './BlogTags';
+import authRouter from './auth';
+import {isLoggedIn, tokenMiddleware} from '../middleware/auth.mw';
+import usersRouter from './users';
 
 let router = Router();
 
-router.use('/people', peopleRouter);
+router.use('/auth', authRouter);
 router.use('/blogs', blogsRouter);
 router.use('/tags', tagsRouter);
 router.use('/blogtags', blogtagsRouter);
+router.use('/users', usersRouter);
+router.use(tokenMiddleware);
+router.use(isLoggedIn);
 export default router;

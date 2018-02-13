@@ -1,6 +1,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import Blogtags from './blogtags';
 
 class SingleBlog extends Component {
     constructor(props) {
@@ -42,19 +43,14 @@ class SingleBlog extends Component {
         console.log(id)
         fetch(`/api/blogs/blog/${id}`)
             .then((response) => {
-                console.log(response);
                 return response.json();
-
             }).then((tags) => {
-
                 let tagsArray = [];
                 for (let i = 0; i < tags.length; i++) {
-
                 tagsArray.push({
                       
                         id: tags[i].id,
                         name: tags[i].name,
-                      
                     });
                 }
                 this.setState({
@@ -89,10 +85,7 @@ class SingleBlog extends Component {
                             <li className="nav-item">
                             <Link to={`/${this.props.match.params.id}/edit`} className="nav-link">  Edit</Link>
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#"
-                                onClick={() => { this.deleteBlog(this.props.match.params.id) }}>Delete</a>
-                            </li>
+                           
 
 
                         </ul>
@@ -100,7 +93,12 @@ class SingleBlog extends Component {
                 </nav>
               
                 <div className="card">
-  <h5 className="card-header">Tags:</h5>
+  <h5 className="card-header">Tags:
+  {this.state.tags.map((tag) => {
+return (
+    <Blogtags key={tag.id} name={tag.name} id={tag.id}  />
+)
+})}</h5>
   <div className="card-body">
     <h5 className="card-title">{this.state.blog.title}</h5>
     <p className="card-text">{this.state.blog.content}</p>

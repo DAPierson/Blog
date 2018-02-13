@@ -140,6 +140,10 @@ class EditBlog extends Component {
                                 <a className="nav-link" href="#"
                                 onClick={() => { this.editBlog(this.props.match.params.id, ) }}>Submit</a>
                             </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="#"
+                                onClick={() => { this.deleteBlog(this.props.match.params.id) }}>Delete</a>
+                            </li>
 
 
                         </ul>

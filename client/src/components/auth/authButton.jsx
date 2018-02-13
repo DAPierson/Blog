@@ -5,9 +5,9 @@ import { isLoggedIn } from '../../services/user';
 const AuthButton = withRouter(
     ({ history }) => {
         if (isLoggedIn()) {
-            return <Link className="btn btn-info" to="/logout">Logout</Link>;
+            return <Link className="nav-link" to="/logout">Logout</Link>;
         } else {
-            return <Link className="btn btn-info" to="/login">Login</Link>;
+            return <Link className="nav-link" to="/login">Login</Link>;
         }
     }
 );
