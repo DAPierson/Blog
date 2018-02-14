@@ -6,7 +6,8 @@ import SingleBlog from "./singleblog";
 import EditBlog from "./editblog";
 import Login from "./auth/login";
 import Logout from "./auth/logout";
-import PrivateRoute from "./auth/privateRoute"
+import PrivateRoute from "./auth/privateRoute";
+import AltCreateBlog from './altcreateblog';
 class Navigation extends Component {
 
     render() {
@@ -16,7 +17,7 @@ class Navigation extends Component {
                    
                     <Switch>
                         <Route exact path="/" component={HomePage} />
-                        <PrivateRoute exact path='/create' component ={CreateBlog}   />
+                        <PrivateRoute exact path='/create' component ={AltCreateBlog}   />
                         <Route exact path='/login' component ={Login}  />
                         <Route exact path='/logout' component ={Logout}  />
                         <Route exact path='/:id' component ={SingleBlog}  />
