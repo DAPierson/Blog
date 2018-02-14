@@ -30,15 +30,7 @@ class SingleBlog extends Component {
                 console.log(err);
             });
     };
-    deleteBlog(id) {
-        fetch(`/api/Blogs/${id}`, {
-            method: 'DELETE',
-        }).then(() => {
-            this.props.history.goBack();
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
+    
     getBlogTag(id) {
         console.log(id)
         fetch(`/api/blogs/blog/${id}`)

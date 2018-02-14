@@ -12,7 +12,9 @@ router.use('/auth', authRouter);
 router.use('/blogs', blogsRouter);
 router.use('/tags', tagsRouter);
 router.use('/blogtags', blogtagsRouter);
-router.use('/users', usersRouter);
+
 router.use(tokenMiddleware);
 router.use(isLoggedIn);
+router.use('/users', usersRouter);
+
 export default router;

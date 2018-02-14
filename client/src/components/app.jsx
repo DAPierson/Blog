@@ -16,7 +16,7 @@ class Navigation extends Component {
                    
                     <Switch>
                         <Route exact path="/" component={HomePage} />
-                        <Route exact path='/create' component ={CreateBlog}   />
+                        <PrivateRoute exact path='/create' component ={CreateBlog}   />
                         <Route exact path='/login' component ={Login}  />
                         <Route exact path='/logout' component ={Logout}  />
                         <Route exact path='/:id' component ={SingleBlog}  />

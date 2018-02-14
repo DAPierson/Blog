@@ -1,11 +1,14 @@
+
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-class AddTag extends Component {
+class DelTag extends Component {
 
 
-setTag(blog,tag){
-    this.props.addTag(blog,tag);
+delTag(blog,tag){
+    console.log(blog,tag);
+    this.props.delTag(blog,tag);
+    
 }
 
 
@@ -14,7 +17,7 @@ setTag(blog,tag){
             <Fragment>
 
 <a className="dropdown-item" 
-onClick={() => { this.setTag(this.props.blogid,this.props.id) }}>{this.props.name}</a>
+onClick={() => { this.delTag(this.props.blogid,this.props.id) }}>{this.props.name}</a>
 
 
             </Fragment>
@@ -22,4 +25,4 @@ onClick={() => { this.setTag(this.props.blogid,this.props.id) }}>{this.props.nam
     }
 }
 
-export default AddTag;
+export default DelTag;
