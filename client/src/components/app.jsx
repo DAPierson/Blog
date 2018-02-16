@@ -1,13 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link,  } from 'react-router-dom';
 import HomePage from './homepage';
-import CreateBlog from './createblog';
 import SingleBlog from "./singleblog";
 import EditBlog from "./editblog";
 import Login from "./auth/login";
 import Logout from "./auth/logout";
 import PrivateRoute from "./auth/privateRoute";
-import AltCreateBlog from './altcreateblog';
+import CreateBlog from './createblog';
 class Navigation extends Component {
 
     render() {
@@ -17,7 +16,7 @@ class Navigation extends Component {
                    
                     <Switch>
                         <Route exact path="/" component={HomePage} />
-                        <PrivateRoute exact path='/create' component ={AltCreateBlog}   />
+                        <PrivateRoute exact path='/create' component ={CreateBlog}   />
                         <Route exact path='/login' component ={Login}  />
                         <Route exact path='/logout' component ={Logout}  />
                         <Route exact path='/:id' component ={SingleBlog}  />

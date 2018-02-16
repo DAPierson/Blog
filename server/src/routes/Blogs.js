@@ -9,27 +9,42 @@ router.get('/', (req, res) => {
     blogs.getAll()
         .then(blogs => {
             res.json(blogs);
-        })
+        });
 });
 
+// insert post
+// map through tags
+// insert blogstags
 router.post('/', (req, res) => {
     blogs.insert(req.body)
         .then(blogs => {
-            res.send("Cool");
+            res.json(blogs);
         })
 
-})
+
+});
+
+// update post
+// delete all blogstags
+// map through tags
+// insert blogstags
 router.put('/:id', (req, res) => {
     blogs.update(req.params.id, req.body)
         .then(blogs => {
-            res.send('update');
-        })
+            res.sendStatus(200);
+        })      
 })
 
+// get post
+// find blogstags for blogid
+// map through blogstags
+// get tags
 router.get('/:id', (req, res) => {
     blogs.getOne(req.params.id)
         .then(blogs => {
             res.json(blogs);
+        }).then(()=>{
+
         })
 })
 
@@ -60,8 +75,8 @@ router.post('/addtag', (req, res) => {
         });
 })
 
-router.delete('/deltag/:bid/:tid', (req, res) => {
-    rows('spDelTag', [req.params.bid, req.params.tid])
+router.delete('/deltag/:bid', (req, res) => {
+    rows('spDelTag', [req.params.bid])
         .then(tags => {
             res.sendStatus(200);
         })

@@ -1,33 +1,23 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import AddTag from './addtag';
-import Checkbox from './checkbox';
 
 
-class AltCreateBlog extends Component {
+class CreateBlog extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             title: '',
             content: '',
-            tags: [],
-            addtags: [],
+            tags: []
         }
     }
 
     componentDidMount() {
         this.getTags()
-        console.log(this.state.tags)
     }
-checkbox(id){
-    if( this.state.addtags[id-1] ===null){
-        this.state.addtags.splice(id-1,1,id);
-    }else{
-        this.state.addtags.splice(id-1,1,null);
-    }
-    console.log(this.state.addtags);
-}
+
 
     createBlog(values) {
         fetch('/api/Blogs/', {
@@ -59,25 +49,18 @@ checkbox(id){
                 return response.json();
             }).then((tags) => {
                 let tagsArray = [];
-                let addtagsArray =[];
                 for (let i = 0; i < tags.length; i++) {
 
                     tagsArray.push({
                         name: tags[i].name,
                         id: tags[i].id,
 
-
                     });
-                    addtagsArray.push(null)
                 }
                 this.setState({
                     tags: tagsArray
 
                 });
-                this.setState({
-                    addtags: addtagsArray
-                });
-                console.log(this.state.addtags)
                 console.log(this.state.tags);
             })
             .catch((err) => {
@@ -108,32 +91,36 @@ checkbox(id){
                         </ul>
                     </div>
                 </nav>
-                <form>
-                    <div className="form-group">
-                        <label >Title</label>
-                        <input type="email" className="form-control" placeholder="Your Blogs Title" />
+                <h1> Make a Blog </h1>
+                <div className="input-group input-group-sm mb-3">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text" id="inputGroup-sizing-sm">Title</span>
                     </div>
-
-
-                    <div className="form-group">
-                        <label >Your Blog</label>
-                        <textarea className="form-control"  rows="3"></textarea>
+                    <input type="text" className="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                        onChange={(event) => { this.handleTitleChange(event.target.value) }} />
+                </div>
+                <div className="input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">Blog</span>
                     </div>
-                    <label> Tags:
-                    {this.state.tags.map((tag) => {
+                    <textarea className="form-control" aria-label="With textarea"
+                        onChange={(event) => { this.handleBlogChange(event.target.value) }}></textarea>
+                </div>
+                <button type="button" className="btn btn-primary btn-lg btn-block"
+                    onClick={() => { this.createBlog(this.state) }}>Post your Blog</button>
+                <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add Tag/s
+  </button>
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {this.state.tags.map((tag) => {
 
-                        return (
-
-                            <Checkbox key={tag.id} name={tag.name} id={tag.id} checkbox={(id) => { this.checkbox(id) }} />
-                        )
-
-                    })}
-                    </label><br/>
-                    <button type='submit'>Submit</button>
-                </form>
-
-
-
+                            return (
+                                <AddTag key={tag.id} name={tag.name} id={tag.id} />
+                            )
+                        })}
+                    </div>
+                </div>
             </React.Fragment>
 
         )
@@ -144,4 +131,4 @@ checkbox(id){
     }
 }
 
-export default AltCreateBlog;
+export default CreateBlog;

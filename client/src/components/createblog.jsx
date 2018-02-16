@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import AddTag from './addtag';
+import Checkbox from './checkbox';
 
 
 class CreateBlog extends Component {
@@ -10,15 +11,59 @@ class CreateBlog extends Component {
         this.state = {
             title: '',
             content: '',
-            tags: []
+            tags: [],
+            addtags: [],
+            blogid: [],
+            alltags: [],
+            currenttags: [],
         }
     }
 
     componentDidMount() {
         this.getTags()
+
+    }
+    checkbox(tag) {
+        tag.checked = !tag.checked;
+
+        this.setState({ addtags: this.state.addtags });
     }
 
+    blogSubmit(e) {
+        e.preventDefault();
+        this.createBlog();
 
+    
+
+
+    }
+    getTags() {
+        fetch('/api/Tags/')
+            .then((response) => {
+                return response.json();
+            }).then((tags) => {
+                let addtagsArray = tags.map((tag) => {
+                    let found = this.state.currenttags.some((t) => {
+                        return t.id === tag.id;
+                    });
+
+                    if (found) {
+                        tag.checked = true;
+                    }
+
+                    return tag;
+                });
+                this.setState({
+                    alltags: tags
+                });
+                this.setState({
+                    addtags: addtagsArray
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
     createBlog(values) {
         fetch('/api/Blogs/', {
             method: 'POST',
@@ -29,12 +74,38 @@ class CreateBlog extends Component {
                 title: this.state.title,
                 content: this.state.content,
             })
+        }).then((res) => {
+            return res.json();
+        }).then((res) => {
+            this.setState({ blogid: res.id });
+            this.setTag(this.state.blogid,this.state.addtags);
         }).then(() => {
-            this.props.history.goBack();
+            this.props.history.push("/");
         }).catch((err) => {
             console.log(err);
+        })
+
+    }
+    setTag(blog, tags) {
+        console.log(tags);
+        tags.map((tag)=>{
+            if(tag.checked===true){
+        fetch('/api/Blogs/addtag', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                blog,
+                tag: tag.id,
+            })
+        }).catch((err) => {
+            console.log(err);
+        })}
         });
     }
+
+
     handleTitleChange(value) {
         this.setState({ title: value });
     }
@@ -42,34 +113,8 @@ class CreateBlog extends Component {
         this.setState({ content: value });
     }
 
-
-    getTags() {
-        fetch('/api/Tags/')
-            .then((response) => {
-                return response.json();
-            }).then((tags) => {
-                let tagsArray = [];
-                for (let i = 0; i < tags.length; i++) {
-
-                    tagsArray.push({
-                        name: tags[i].name,
-                        id: tags[i].id,
-
-                    });
-                }
-                this.setState({
-                    tags: tagsArray
-
-                });
-                console.log(this.state.tags);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
-
     home(ev) {
-        this.props.history.goBack();
+        this.props.history.push("/");
     }
 
 
@@ -91,36 +136,33 @@ class CreateBlog extends Component {
                         </ul>
                     </div>
                 </nav>
-                <h1> Make a Blog </h1>
-                <div className="input-group input-group-sm mb-3">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text" id="inputGroup-sizing-sm">Title</span>
+                <form onSubmit={(e) => this.blogSubmit(e)}>
+                    <div className="form-group">
+                        <label >Title</label>
+                        <input type="text" className="form-control" placeholder="Your Blogs Title"
+                            onChange={(event) => { this.handleTitleChange(event.target.value) }} />
                     </div>
-                    <input type="text" className="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
-                        onChange={(event) => { this.handleTitleChange(event.target.value) }} />
-                </div>
-                <div className="input-group">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text">Blog</span>
-                    </div>
-                    <textarea className="form-control" aria-label="With textarea"
-                        onChange={(event) => { this.handleBlogChange(event.target.value) }}></textarea>
-                </div>
-                <button type="button" className="btn btn-primary btn-lg btn-block"
-                    onClick={() => { this.createBlog(this.state) }}>Post your Blog</button>
-                <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add Tag/s
-  </button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {this.state.tags.map((tag) => {
 
-                            return (
-                                <AddTag key={tag.id} name={tag.name} id={tag.id} />
-                            )
-                        })}
+
+                    <div className="form-group">
+                        <label >Your Blog</label>
+                        <textarea className="form-control" rows="3"
+                            onChange={(event) => { this.handleBlogChange(event.target.value) }}></textarea>
                     </div>
-                </div>
+
+                 <label> Tags:
+                    {this.state.addtags.map((tag) => {
+                            return (
+                                <Checkbox key={tag.id} tag={tag} checkbox={(tag) => { this.checkbox(tag) }} />
+                            );
+                        })}
+                    </label><br />
+
+                    <button type='submit'>Submit</button>
+                </form>
+
+
+
             </React.Fragment>
 
         )

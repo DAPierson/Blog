@@ -3,23 +3,30 @@ import React, { Component, Fragment } from 'react';
 
 class Checkbox extends Component {
 
-toggleCheckbox(id){
-    console.log(id-1);
-    this.props.checkbox(id);
-}
+    toggleCheckbox(tag) {
+        this.props.checkbox(tag);
+    }
 
 
 
     render() {
-        return (
-            <Fragment>
-                
-                <input type='checkbox' value={this.props.id}  onChange={(event) => {this.toggleCheckbox(this.props.id)}}/>{this.props.name}
+        let tag = this.props.tag;
+        if (!tag.checked) {
+            return (
+                <Fragment>
+                    <input type='checkbox' checked={false} value={tag.id} onChange={(event) => { this.toggleCheckbox(tag) }} /><label htmlFor={tag.id}>{tag.name}</label>
+                </Fragment>
+            );
+        } else {
+            return (
+                <Fragment>
+                    <input type='checkbox' checked={true} value={tag.id} onChange={(event) => { this.toggleCheckbox(tag) }} /><label htmlFor={tag.id}>{tag.name}</label>
+                </Fragment>
+            );
+        }
 
-
-            </Fragment>
-        );
     }
 }
+
 
 export default Checkbox;
