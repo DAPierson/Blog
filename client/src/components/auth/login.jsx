@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import * as userService from '../../services/user';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link} from 'react-router-dom';
 import IndeterminateProgress from '../utilities/indeterminateProgress';
 
 class Login extends Component {
@@ -81,6 +81,9 @@ class Login extends Component {
                                 <a className="nav-link" href="#"
                                 onClick={(ev) => { this.home(ev) }}
                                 >Home <span className="sr-only">(current)</span></a>
+                            </li>
+                            <li className="navbar-item active">
+                           <Link to='/createuser'  className="nav-link" href="#">Sign Up  </Link>
                             </li>
                         </ul>
                     </div>

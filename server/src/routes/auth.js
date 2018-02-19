@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { encode } from '../utils/tokens';
+import { generateHash } from '../utils/security';
+import { rows } from '../config/db';
+
 
 let router = Router();
 
@@ -17,4 +20,27 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
-export default router;
+// router.get('/generate/:pw', (req, res, next) => {
+//     generateHash(req.params.pw)
+//         .then((hash) => {
+//             res.send(hash);
+//         }).catch((err) => {
+//             next(err);
+//         });
+// });
+
+router.post('/createuser', (req, res) => {
+    generateHash(req.body.password)
+        .then((hash) => {
+            rows('spCreateUser', [req.body.name, req.body.email, hash])
+                .then(tags => {
+                    res.sendStatus(200);
+                });
+        }).catch((err) => {
+            next(err);
+        });
+    });
+
+
+
+    export default router;

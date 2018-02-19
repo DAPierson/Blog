@@ -7,6 +7,7 @@ import Login from "./auth/login";
 import Logout from "./auth/logout";
 import PrivateRoute from "./auth/privateRoute";
 import CreateBlog from './createblog';
+import CreateUser from './auth/createuser';
 class Navigation extends Component {
 
     render() {
@@ -16,6 +17,7 @@ class Navigation extends Component {
                    
                     <Switch>
                         <Route exact path="/" component={HomePage} />
+                        <Route exact path='/createuser' component={CreateUser} />
                         <PrivateRoute exact path='/create' component ={CreateBlog}   />
                         <Route exact path='/login' component ={Login}  />
                         <Route exact path='/logout' component ={Logout}  />

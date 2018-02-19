@@ -83,7 +83,6 @@ router.delete('/deltag/:bid', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
-    console.log(`call spDelBlog(${req.params.id})`);
     rows('spDelBlog', [req.params.id])
         .then(tags => {
             res.sendStatus(200);
