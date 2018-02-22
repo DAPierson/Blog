@@ -4,6 +4,15 @@ import { rows } from '../config/db';
 
 let router = Router();
 let blogs = new Table('Blogs')
+let users = new Table('users');
+
+router.get('/users', (req, res) => {
+    users.getAll()
+    .then(users=>{
+         res.json(users);
+    })
+});
+
 
 router.get('/', (req, res) => {
     blogs.getAll()
@@ -16,6 +25,7 @@ router.get('/', (req, res) => {
 // map through tags
 // insert blogstags
 router.post('/', (req, res) => {
+    console.log(req.user);
     blogs.insert(req.body)
         .then(blogs => {
             res.json(blogs);

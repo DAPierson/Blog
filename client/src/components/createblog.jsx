@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import AddTag from './addtag';
 import Checkbox from './checkbox';
-
+import * as blogService from '../services/blog';
 
 class CreateBlog extends Component {
 
@@ -38,10 +38,8 @@ class CreateBlog extends Component {
 
     }
     getTags() {
-        fetch('/api/Tags/')
-            .then((response) => {
-                return response.json();
-            }).then((tags) => {
+        blogService.allTags(
+            ).then((tags) => {
                 let addtagsArray = tags.map((tag) => {
                     let found = this.state.currenttags.some((t) => {
                         return t.id === tag.id;
@@ -65,18 +63,10 @@ class CreateBlog extends Component {
             });
     }
     createBlog(values) {
-        fetch('/api/Blogs/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: this.state.title,
-                content: this.state.content,
-            })
-        }).then((res) => {
-            return res.json();
-        }).then((res) => {
+        blogService.insert({
+            title: this.state.title,
+            content: this.state.content,
+        }). then((res) => {
             this.setState({ blogid: res.id });
             this.setTag(this.state.blogid,this.state.addtags);
         }).then(() => {
@@ -90,20 +80,15 @@ class CreateBlog extends Component {
         console.log(tags);
         tags.map((tag)=>{
             if(tag.checked===true){
-        fetch('/api/Blogs/addtag', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        blogService.insertTags({
                 blog,
                 tag: tag.id,
-            })
-        }).catch((err) => {
-            console.log(err);
-        })}
-        });
-    }
+            });
+        };
+        })
+        }
+        
+    
 
 
     handleTitleChange(value) {

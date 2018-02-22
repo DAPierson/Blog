@@ -3,6 +3,7 @@ import { Link } from 'react-dom';
 import AddTag from './addtag';
 import DelTag from './deltag';
 import Checkbox from './checkbox';
+import * as blogService from '../services/blog';
 
 class EditBlog extends Component {
     constructor(props) {
@@ -28,14 +29,11 @@ class EditBlog extends Component {
         };
     }
 
-
-
     componentDidMount() {
         this.getBlog(this.props.match.params.id)
         this.getBlogTag(this.props.match.params.id)
         this.getTags()
     }
-
 
     edit(e) {
         e.preventDefault();
@@ -43,37 +41,33 @@ class EditBlog extends Component {
 
     }
 
-
     checkbox(tag) {
         tag.checked = !tag.checked;
 
         this.setState({ addtags: this.state.addtags });
     }
+
     delTags(id) {
-        fetch(`/api/blogs/deltag/${id}`, {
-            method: 'DELETE',
-        }).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
+        blogService.destroyTag(id)
+            .then((res) => {
+                console.log(res);
+            }).catch((err) => {
+                console.log(err);
+            })
     }
 
     deleteBlog(id) {
-        fetch(`/api/Blogs/${id}`, {
-            method: 'DELETE',
-        }).then(() => {
-            this.props.history.push("/");
-        }).catch((err) => {
-            console.log(err);
-        });
+        blogService.destroy(id)
+            .then(() => {
+                this.props.history.push("/");
+            }).catch((err) => {
+                console.log(err);
+            });
     }
 
     getBlogTag(id) {
-        fetch(`/api/blogs/blog/${id}`)
-            .then((response) => {
-                return response.json();
-            }).then((tags) => {
+        blogService.blogTag(id)
+            .then((tags) => {
                 let tagsArray = [];
                 for (let i = 0; i < tags.length; i++) {
                     tagsArray.push({
@@ -89,28 +83,24 @@ class EditBlog extends Component {
                 console.log(err);
             });
     }
+
     getBlog(id) {
-        fetch(`/api/blogs/${id}`)
-            .then((response) => {
-                return response.json();
-            }).then((blog) => {
-                this.setState({title:blog.title });
-                this.setState({content:blog.content})
+        blogService.one(id)
+            .then((blog) => {
+                this.setState({ title: blog.title });
+                this.setState({ content: blog.content })
             }).catch((err) => {
 
             });
     };
+
     editBlog(id) {
-        fetch(`/api/Blogs/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: this.state.title,
-                content: this.state.content,
-            })
+        blogService.update(id, {
+            title: this.state.title,
+            content: this.state.content,
+
         }).then((res) => {
+
             this.delTags(this.props.match.params.id);
         }).then(() => {
             this.setTag(this.props.match.params.id, this.state.addtags);
@@ -119,11 +109,11 @@ class EditBlog extends Component {
             console.log(err);
         });
     }
+
     getTags() {
-        fetch('/api/Tags/')
-            .then((response) => {
-                return response.json();
-            }).then((tags) => {
+        blogService.allTags()
+
+            .then((tags) => {
                 let addtagsArray = tags.map((tag) => {
                     let found = this.state.currenttags.some((t) => {
                         return t.id === tag.id;
@@ -146,25 +136,19 @@ class EditBlog extends Component {
                 console.log(err);
             });
     }
+
     setTag(blog, tags) {
         console.log(tags);
         tags.map((tag) => {
             if (tag.checked === true) {
-                fetch('/api/Blogs/addtag', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        blog,
-                        tag: tag.id,
-                    })
-                }).catch((err) => {
-                    console.log(err);
+                blogService.insertTags({
+                    blog,
+                    tag: tag.id,
                 })
             }
         });
     }
+
     home(ev) {
         this.props.history.push('/');
     };
@@ -172,11 +156,13 @@ class EditBlog extends Component {
     back(ev) {
         this.props.history.goBack();
     };
+
     handleTitleChange(value) {
-        this.setState( {title: value });
+        this.setState({ title: value });
     }
+    
     handleBlogChange(value) {
-        this.setState( {content: value });
+        this.setState({ content: value });
     }
 
     render() {
@@ -211,7 +197,7 @@ class EditBlog extends Component {
                 <form onSubmit={(e) => this.edit(e)}>
                     <div className="form-group">
                         <label >Edit Title</label>
-                        <input type="text" className="form-control" placeholder={this.state.title} 
+                        <input type="text" className="form-control" placeholder={this.state.title}
                             onChange={(event) => { this.handleTitleChange(event.target.value) }} />
                     </div>
 

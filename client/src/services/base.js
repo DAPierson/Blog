@@ -45,10 +45,19 @@ function json(url, method = 'GET', payload = {}) {
     return makeFetch(url, data)
     .then((response) => {
         if (response.ok) {
-            return response.json();
-        } else {
-            throw response;
+            if (response.headers.get('Content-Type').indexOf('application/json') > -1) {
+                return response.json();
+            }
+
+            return response.statusText;
         }
+        if (response.headers.get('Content-Type').indexOf('application/json') > -1) {
+            return response.json().then((result) => {
+                throw result;  
+            });
+        }
+        
+        throw response;
     });
 }
 
