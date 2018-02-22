@@ -1,4 +1,5 @@
 import React, {Component,Fragment} from 'react';
+import * as blogService from '../../services/blog';
 
 class CreateUser extends Component{
     constructor(props){
@@ -12,16 +13,11 @@ class CreateUser extends Component{
     
     }
     createUser(name,email,password) {
-        fetch('/api/auth/createuser', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        blogService.createUser({
                 name,
                 email,
                 password,
-            })
+            
         }).then(() => {
             this.props.history.goBack();
         }).catch((err) => {

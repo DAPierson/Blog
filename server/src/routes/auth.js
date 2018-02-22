@@ -20,16 +20,8 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
-// router.get('/generate/:pw', (req, res, next) => {
-//     generateHash(req.params.pw)
-//         .then((hash) => {
-//             res.send(hash);
-//         }).catch((err) => {
-//             next(err);
-//         });
-// });
 
-router.post('/createuser', (req, res) => {
+router.post('/createuser', (req, res, next) => {
     generateHash(req.body.password)
         .then((hash) => {
             rows('spCreateUser', [req.body.name, req.body.email, hash])

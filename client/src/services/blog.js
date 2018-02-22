@@ -38,11 +38,13 @@ function tagBlog(id) {
     return baseService.get(`/api/blogs/tag/${id}`);
 }
 function destroyTag(id){
-    return baseService.destroy(`/api/blogs/deltag/${id}`)
+    return baseService.destroy(`/api/blogs/deltag/${id}`);
 }
 
 function blogTag(id){
-    return baseService.get(`/api/blogs/blog/${id}`)
+    return baseService.get(`/api/blogs/blog/${id}`);
 }
-
-export { all, one, insert, update, destroy, insertTags, allTags, allUsers, tagBlog, destroyTag, blogTag};
+function createUser(data){
+return baseService.post('/api/auth/createuser', data);
+}
+export { all, one, insert, update, destroy, insertTags, allTags, allUsers, tagBlog, destroyTag, blogTag, createUser};
